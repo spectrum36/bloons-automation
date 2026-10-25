@@ -34,12 +34,12 @@ def cash():
     ).stdout
     img = Image.open(io.BytesIO(png))
     img = ImageOps.grayscale(img)
-    
+
     img = img.point(lambda p: 255 if p == 255 else 0)
 
     img = ImageOps.invert(img)
 
-    img.save("debug.png")
+    #img.save("debug.png")
 
     text = ts.image_to_string(
         img,
@@ -56,18 +56,23 @@ def get_cash():
             int(c)
         except ValueError:
             c = ""
-    return c
+    return int(c)
 
 
-def wait_cash(x):
+def wait_cash(x, y):
     """wait for cash amount"""
     c = get_cash()
-    i = 0
-    while int(c) < x:
+    while True:
         time.sleep(3)
         c = get_cash()
-        print(c)
-        i = i + 1
+        print(f"{c} | {y}")
+        if (c - y) / ((y + c) /2) < .4:
+            if x < c:
+                break
+        else:
+            print(f"ignored cash, reading at {c}")
+        y = c
+    return y
 
 def pixel(x,y):
     """gets color of pixel"""
@@ -95,6 +100,7 @@ def place(x):
 
     mouse.click(x[0], x[1], "left")
     time.sleep(STEP)
+    return get_cash()
 
 def sel_map():
     """from home screen, selects adora's temple on chimps"""
@@ -148,104 +154,105 @@ def path(x, y):
     ui.syn()
     time.sleep(STEP)
     select(CLR)
+    return get_cash()
 
 def main():
     """fuck you nk, I'm automating chimps"""
     sel_map()
     time.sleep(5)
-    place(NINJA)
+    last = place(NINJA)
 
     time.sleep(STEP)
     start()
 
-    wait_cash(325)
-    path(PTH3, NINJA)
+    last = wait_cash(325, last)
+    last = path(PTH3, NINJA)
 
-    wait_cash(700)
-    place(ET)
+    last = wait_cash(700, last)
+    last = place(ET)
 
-    wait_cash(485)
-    path(PTH3, NINJA)
-
-    for _ in range(2):
-        wait_cash(380)
-        path(PTH1, NINJA)
-
-    wait_cash(2430)
-    path(PTH3, NINJA)
-
-    wait_cash(430)
-    place(ICE)
-    select(CLR)
-
-    wait_cash(430)
-    place(DRUID)
-    select(CLR)
-
-    wait_cash(380)
-    path(PTH1, DRUID)
-
-    wait_cash(270)
-    path(PTH2, DRUID)
-
-    wait_cash(380)
-    path(PTH2, DRUID)
-
-    wait_cash(1135)
-    path(PTH2, DRUID)
-
-    wait_cash(5400)
-    path(PTH3, NINJA)
-
-    wait_cash(920)
-    path(PTH1, DRUID)
-
-    wait_cash(5290)
-    path(PTH2, DRUID)
-
-    wait_cash(160)
-    path(PTH1, ICE)
-
-    wait_cash(160)
-    path(PTH3, ICE)
-
-    wait_cash(215)
-    path(PTH3, ICE)
-
-    wait_cash(2050)
-    path(PTH3, ICE)
-
-    wait_cash(2970)
-    path(PTH3, ICE)
-
-    wait_cash(32400)
-    path(PTH3, ICE)
-
-    wait_cash(270)
-    place(WIZ)
-    select(CLR)
-
-    wait_cash(190)
-    path(PTH1, WIZ)
+    last = wait_cash(485, last)
+    last = path(PTH3, NINJA)
 
     for _ in range(2):
-        wait_cash(325)
-        path(PTH3, WIZ)
+        last = wait_cash(380, last)
+        last = path(PTH1, NINJA)
 
-    wait_cash(485)
-    path(PTH1, WIZ)
+    last = wait_cash(2430, last)
+    last = path(PTH3, NINJA)
 
-    wait_cash(1620)
-    path(PTH3, WIZ)
+    last = wait_cash(430, last)
+    last = place(ICE)
+    select(CLR)
 
-    wait_cash(3025)
-    path(PTH3, WIZ)
+    wait_cash(430, last)
+    last = place(DRUID)
+    select(CLR)
 
-    wait_cash(28620)
-    path(PTH3, WIZ)
+    last = wait_cash(380, last)
+    last = path(PTH1, DRUID)
 
-    wait_cash(43200)
-    path(PTH3, NINJA)
+    last = wait_cash(270, last)
+    last = path(PTH2, DRUID)
+
+    last = wait_cash(380, last)
+    last = path(PTH2, DRUID)
+
+    last = wait_cash(1135, last)
+    last = path(PTH2, DRUID)
+
+    last = wait_cash(5400, last)
+    last = path(PTH3, NINJA)
+
+    last = wait_cash(920, last)
+    last = path(PTH1, DRUID)
+
+    last = wait_cash(5290, last)
+    last = path(PTH2, DRUID)
+
+    last = wait_cash(160, last)
+    last = path(PTH1, ICE)
+
+    last = wait_cash(160, last)
+    last = path(PTH3, ICE)
+
+    last = wait_cash(215, last)
+    last = path(PTH3, ICE)
+
+    last = wait_cash(2050, last)
+    last = path(PTH3, ICE)
+
+    last = wait_cash(2970, last)
+    last = path(PTH3, ICE)
+
+    last = wait_cash(32400, last)
+    last =path(PTH3, ICE)
+
+    last = wait_cash(270, last)
+    last = place(WIZ)
+    select(CLR)
+
+    last = wait_cash(190, last)
+    last = path(PTH1, WIZ)
+
+    for _ in range(2):
+        last = wait_cash(325, last)
+        last = path(PTH3, WIZ)
+
+    last = wait_cash(485, last)
+    last = path(PTH1, WIZ)
+
+    last = wait_cash(1620, last)
+    last = path(PTH3, WIZ)
+
+    last = wait_cash(3025, last)
+    last = path(PTH3, WIZ)
+
+    last = wait_cash(28620, last)
+    last = path(PTH3, WIZ)
+
+    last = wait_cash(43200, last)
+    last = path(PTH3, NINJA)
 
     while True:
         px = pixel(2505, 775)
