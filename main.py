@@ -1,8 +1,11 @@
 """fuck you nk"""
 import time
 import subprocess
+import io
+from PIL import Image, ImageOps
 from wayland_automation import Mouse, Keyboard
 from evdev import UInput, ecodes as e
+import pytesseract as ts
 ui = UInput()
 mouse = Mouse()
 kb = Keyboard()
@@ -13,6 +16,57 @@ NINJA = [2693, 337, e.KEY_D]
 ET = [2822, 337, e.KEY_U]
 DRUID = [2822, 457, e.KEY_G]
 ICE = [2693, 457, e.KEY_T]
+CLR = [2740, 1000]
+PTH1 = e.KEY_COMMA
+PTH2 = e.KEY_DOT
+PTH3 = e.KEY_SLASH
+
+def select(x):
+    """here so I don't have to keep typing this"""
+    mouse.click(x[0], x[1], "left")
+    time.sleep(STEP)
+
+def cash():
+    """gets cash, returns string"""
+    png = subprocess.run(
+        [ "grim", "-g", "2286,9 220x60", "-t", "png", "-"],
+        capture_output=True, check=True,
+    ).stdout
+    img = Image.open(io.BytesIO(png))
+    img = ImageOps.grayscale(img)
+    #img = ImageOps.invert(img)
+    img = img.point(lambda p: 255 if p == 255 else 0)
+
+    img.save("debug.png")
+
+    text = ts.image_to_string(
+        img,
+        config="--psm 7 -c tessedit_char_whitelist=0123456789",
+    )
+    return text
+
+def get_cash():
+    """try to get cash"""
+    c = ""
+    while c == "":
+        c = cash()[:-1]
+        try:
+            int(c)
+        except ValueError:
+            c = ""
+    return c
+
+
+def wait_cash(x):
+    """wait for cash amount"""
+    c = get_cash()
+    i = 0
+    while int(c) < x:
+        time.sleep(3)
+        c = get_cash()
+        if i % 1 == 0:
+            print(c)
+        i = i + 1
 
 def pixel(x,y):
     """gets color of pixel"""
@@ -26,19 +80,20 @@ def pixel(x,y):
         ret.append(balls[i])
     return ret
 
-def place(x, y, key):
+def place(x):
     """places wizard"""
-    mouse.click(x, y)
+    mouse.click(x[0], x[1])
     time.sleep(STEP)
 
-    ui.write(e.EV_KEY, key, 1)
+    ui.write(e.EV_KEY, x[2], 1)
     ui.syn()
     time.sleep(0.1)
-    ui.write(e.EV_KEY, key, 0)
+    ui.write(e.EV_KEY, x[2], 0)
     ui.syn()
     time.sleep(STEP)
 
-    mouse.click(x, y, "left")
+    mouse.click(x[0], x[1], "left")
+    time.sleep(STEP)
 
 def sel_map():
     """from home screen, selects adora's temple on chimps"""
@@ -72,45 +127,130 @@ def sel_map():
             break
         time.sleep(1)
 
-def path1():
-    """ugprade path 1"""
-    ui.write(e.EV_KEY, e.KEY_COMMA, 1)
-    ui.syn()
-    time.sleep(0.1)
-    ui.write(e.EV_KEY, e.KEY_COMMA, 0)
-    ui.syn()
-    time.sleep(0.1)
+def start():
+    """starts the game"""
+    for _ in range(2):
+        ui.write(e.EV_KEY, e.KEY_SPACE, 1)
+        ui.syn()
+        time.sleep(0.1)
+        ui.write(e.EV_KEY, e.KEY_SPACE, 0)
+        ui.syn()
+        time.sleep(STEP)
 
-def path2():
-    """upgrade path 2"""
-    ui.write(e.EV_KEY, e.KEY_DOT, 1)
+def path(x, y):
+    """ugprade path"""
+    select(y)
+    ui.write(e.EV_KEY, x, 1)
     ui.syn()
     time.sleep(0.1)
-    ui.write(e.EV_KEY, e.KEY_DOT, 0)
+    ui.write(e.EV_KEY, x, 0)
     ui.syn()
-    time.sleep(0.1)
-
-def path3():
-    """upgrade path 3"""
-    ui.write(e.EV_KEY, e.KEY_SLASH, 1)
-    ui.syn()
-    time.sleep(0.1)
-    ui.write(e.EV_KEY, e.KEY_SLASH, 0)
-    ui.syn()
-    time.sleep(0.1)
-
-def clr_screen():
-    """clicks to clear screen of sidebar"""
-    mouse.click(2220, 250, "left")
+    time.sleep(STEP)
+    select(CLR)
 
 def main():
     """fuck you nk, I'm automating chimps"""
-    #sel_map()
+    sel_map()
     time.sleep(5)
-    place(NINJA[0], NINJA[1], NINJA[2])
-    place(ET[0], ET[1], ET[2])
-    place(ICE[0], ICE[1], ICE[2])
-    place(DRUID[0], DRUID[1], DRUID[2])
-    place(WIZ[0], WIZ[1], WIZ[2])
+    place(NINJA)
+
+    time.sleep(STEP)
+    start()
+
+    wait_cash(325)
+    path(PTH3, NINJA)
+
+    wait_cash(700)
+    place(ET)
+
+    wait_cash(485)
+    path(PTH3, NINJA)
+
+    for _ in range(2):
+        wait_cash(380)
+        path(PTH1, NINJA)
+
+    wait_cash(2430)
+    path(PTH3, NINJA)
+
+    wait_cash(430)
+    place(ICE)
+    select(CLR)
+
+    wait_cash(430)
+    place(DRUID)
+    select(CLR)
+
+    wait_cash(380)
+    path(PTH1, DRUID)
+
+    wait_cash(270)
+    path(PTH2, DRUID)
+
+    wait_cash(380)
+    path(PTH2, DRUID)
+
+    wait_cash(1135)
+    path(PTH2, DRUID)
+
+    wait_cash(5400)
+    path(PTH3, NINJA)
+
+    wait_cash(920)
+    path(PTH1, DRUID)
+
+    wait_cash(5290)
+    path(PTH2, DRUID)
+
+    wait_cash(160)
+    path(PTH1, ICE)
+
+    wait_cash(160)
+    path(PTH3, ICE)
+
+    wait_cash(215)
+    path(PTH3, ICE)
+
+    wait_cash(2050)
+    path(PTH3, ICE)
+
+    wait_cash(2970)
+    path(PTH3, ICE)
+
+    wait_cash(32400)
+    path(PTH3, ICE)
+
+    wait_cash(270)
+    place(WIZ)
+    select(CLR)
+
+    wait_cash(190)
+    path(PTH1, WIZ)
+
+    for _ in range(2):
+        wait_cash(325)
+        path(PTH3, WIZ)
+
+    wait_cash(485)
+    path(PTH1, WIZ)
+
+    wait_cash(1620)
+    path(PTH3, WIZ)
+
+    wait_cash(3025)
+    path(PTH3, WIZ)
+
+    wait_cash(28620)
+    path(PTH3, WIZ)
+
+    wait_cash(43200)
+    path(PTH3, NINJA)
+
+    while True:
+        px = pixel(2505, 775)
+        if px[0] == 47 and px[1] == 34 and px[2] == 92:
+            mouse.click(2505, 775, "left")
+            break
+        time.sleep(3)
 
 main()

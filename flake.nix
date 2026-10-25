@@ -13,6 +13,8 @@
       devShells.${system}.default = pkgs.mkShell {
         packages = with pkgs; [
           tesseract
+          grim
+          python314Packages.pytesseract
           python314Packages.evdev
           wtype
           wayland-utils
