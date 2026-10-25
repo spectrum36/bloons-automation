@@ -34,8 +34,10 @@ def cash():
     ).stdout
     img = Image.open(io.BytesIO(png))
     img = ImageOps.grayscale(img)
-    #img = ImageOps.invert(img)
+    
     img = img.point(lambda p: 255 if p == 255 else 0)
+
+    img = ImageOps.invert(img)
 
     img.save("debug.png")
 
@@ -64,8 +66,7 @@ def wait_cash(x):
     while int(c) < x:
         time.sleep(3)
         c = get_cash()
-        if i % 1 == 0:
-            print(c)
+        print(c)
         i = i + 1
 
 def pixel(x,y):
