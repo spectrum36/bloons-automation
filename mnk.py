@@ -81,6 +81,6 @@ class AdoraChimps:
         [650, path, boom, PTH1],
         [2160, path, boom, PTH1],
         [35000, path, boom, PTH1],
-        [37800, path, druid, PTH3],
+        [37800, path, druid, PTH2],
         [43200, path, ninja, PTH3]
     ]
