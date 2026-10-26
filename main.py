@@ -63,7 +63,7 @@ def wait_cash(x, y):
     """wait for cash amount"""
     c = get_cash()
     while True:
-        time.sleep(3)
+        time.sleep(1)
         c = get_cash()
         print(f"{c} | {y}")
         if (c - y) / ((y + c) /2) < .4:
@@ -156,10 +156,63 @@ def path(x, y):
     select(CLR)
     return get_cash()
 
+def finish_chimps():
+    """waits for chimps game to end and navigates end screen"""
+    while True:
+        px = pixel(2505, 775)
+        if px[0] == 47 and px[1] == 34 and px[2] == 92:
+            time.sleep(2)
+            mouse.click(2505, 775, "left")
+            break
+        time.sleep(3)
+
+    while True:
+        px = pixel(2800, 900)
+        if px[0] == 107 and px[1] == 230 and px[2] == 92:
+            time.sleep(2)
+            mouse.click(2800, 900, "left")
+            break
+        time.sleep(3)
+    time.sleep(1)
+    mouse.click(2600, 800, "left")
+    time.sleep(1)
+    while True:
+        out = pixel(2800, 750)
+        print(f"{int(out[0])} | {int(out[1])} | {int(out[2])}")
+        if out[0] != 0 or out[1] != 0 or out[2] != 0:
+            mouse.click(2800, 750, "left")
+            break
+        time.sleep(1)
+
+def collect():
+    """gets collection rewards, if present"""
+    col = pixel(2785, 675)
+    if col[0] != 104 or col[1] != 229 or col[2] != 0:
+        return
+    mouse.click(2785, 675, "left")
+    time.sleep(2)
+
+    y = 560
+    x = 2000
+    for i in range(18):
+        tx = x + (i * 100)
+        col = pixel(tx, y)
+        if col[0] != 18 or col[1] != 20 or col[2] != 23:
+            time.sleep(STEP)
+            mouse.click(tx, y - 60, "left")
+            time.sleep(1)
+            mouse.click(tx, y - 60, "left")
+            time.sleep(STEP)
+    time.sleep(1)
+    mouse.click(2843, 993, "left")
+    time.sleep(STEP)
+    mouse.click(1991, 59, "left")
+    time.sleep(STEP)
+
 def main():
     """fuck you nk, I'm automating chimps"""
     sel_map()
-    time.sleep(5)
+    time.sleep(3)
     last = place(NINJA)
 
     time.sleep(STEP)
@@ -185,7 +238,7 @@ def main():
     last = place(ICE)
     select(CLR)
 
-    wait_cash(430, last)
+    last = wait_cash(430, last)
     last = place(DRUID)
     select(CLR)
 
@@ -218,6 +271,9 @@ def main():
 
     last = wait_cash(215, last)
     last = path(PTH3, ICE)
+
+    last = wait_cash(380, last)
+    last = path(PTH1, ICE)
 
     last = wait_cash(2050, last)
     last = path(PTH3, ICE)
@@ -254,11 +310,9 @@ def main():
     last = wait_cash(43200, last)
     last = path(PTH3, NINJA)
 
-    while True:
-        px = pixel(2505, 775)
-        if px[0] == 47 and px[1] == 34 and px[2] == 92:
-            mouse.click(2505, 775, "left")
-            break
-        time.sleep(3)
+    finish_chimps()
+    collect()
 
-main()
+#runs main infinitely
+while True:
+    main()
