@@ -11,11 +11,9 @@ from evdev import UInput, ecodes as e
 import pytesseract as ts
 
 ui = UInput()
-mouse = Mouse()
+mouse = Mouse(5760, 1200)
 kb = Keyboard()
 STEP = .3
-
-TGT = e.KEY_TAB
 
 @dataclass
 class Clear:
@@ -28,6 +26,41 @@ CLR = Clear(2740, 900)
 def select(z):
     """here so I don't have to keep typing this"""
     mouse.click(z.x, z.y, "left")
+    time.sleep(STEP)
+
+def target(x, tgt):
+    """change targeting"""
+    select(x)
+    time.sleep(STEP)
+
+    if x.tgt == tgt:
+        return
+    change = abs(x.tgt - tgt)
+
+    if x.tgt > tgt:
+        for _ in range(change):
+            ui.write(e.EV_KEY, e.KEY_TAB, 1)
+            ui.syn()
+            time.sleep(0.1)
+            ui.write(e.EV_KEY, e.KEY_TAB, 0)
+            ui.syn()
+            time.sleep(0.1)
+    else:
+        for _ in range(change):
+            ui.write(e.EV_KEY, e.KEY_LEFTCTRL, 1)
+            ui.syn()
+            #time.sleep(0.1)
+            ui.write(e.EV_KEY, e.KEY_TAB, 1)
+            ui.syn()
+            time.sleep(0.1)
+            ui.write(e.EV_KEY, e.KEY_TAB, 0)
+            ui.syn()
+            ui.write(e.EV_KEY, e.KEY_LEFTCTRL, 0)
+            ui.syn()
+            time.sleep(0.1)
+
+    x.tgt = tgt
+    select(CLR)
     time.sleep(STEP)
 
 def cash():

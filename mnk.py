@@ -1,7 +1,7 @@
 """holds build instructions to be used in main.py"""
 from dataclasses import dataclass
 from evdev import ecodes as e
-from act import place, path, start
+from act import place, path, start, target
 
 PTH1 = e.KEY_COMMA
 PTH2 = e.KEY_DOT

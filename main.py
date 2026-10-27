@@ -61,9 +61,10 @@ def sel_map(x, y):
     if px[0] == 95 and px[1] == 148 and px[2] == 215:
         mouse.click(2980, 720, "left")
         time.sleep(1)
+        mouse.click(2000, 100, "nothing")
 
     #wait for map to load, end after selecting ok
-    if y[0] != 2 and y[1] != 3:
+    if y[0] != 2 or y[1] != 3:
         while True:
             out = pixel(2800, 750)
             print(f"{int(out[0])} | {int(out[1])} | {int(out[2])}")
@@ -158,7 +159,9 @@ def collect():
 
 def main():
     """fuck you nk, I'm automating chimps"""
+    #set map class
     mp = mnk.LoopDeflation
+    
     sel_map(mp.map, mp.dif)
     time.sleep(2)
 
