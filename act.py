@@ -11,7 +11,12 @@ from evdev import UInput, ecodes as e
 import pytesseract as ts
 
 ui = UInput()
+
+#mouse class takes in (width, height)
+#width is the total width of your environment (3 monitors is 1920 X 3 = 5760)
+#height is the height of your tallest monitor
 mouse = Mouse(5760, 1200)
+
 kb = Keyboard()
 STEP = .3
 
