@@ -1,16 +1,16 @@
 """fuck you nk"""
 import time
 import mnk
-from act import mouse, STEP, wait_cash, pixel
+from act import mouse, STEP, wait_cash, pixel, mon_x
 
 #TODO add difficulty checks
 def sel_dif(x):
     """select difficulty from list [difficulty, type]"""
-    x0 = 2550
+    x0 = mon_x(630)
     y0 = 400
     dx0 = 330
 
-    x1 = 2860
+    x1 = mon_x(940)
     y1 = 450
     dx1 = 310
     dy1 = 300
@@ -18,7 +18,7 @@ def sel_dif(x):
     mouse.click(x0 + (((x[0] - 1) % 3) * dx0), y0, "left")
     time.sleep(STEP)
     if x[1] == 1:
-        mouse.click(2550, 600, "nothing")
+        mouse.click(mon_x(630), 600, "nothing")
         time.sleep(STEP)
     else:
         mouse.click(x1 + (((x[1] - 2) % 3) * dx1), y1 + (((x[1] - 2) // 3) * dy1), "left")
@@ -27,14 +27,14 @@ def sel_dif(x):
 #TODO add map checks
 def sel_map(x, y):
     """select map from given list [type, page, map num], starting at home screen"""
-    mouse.click(2870, 940, "left")
+    mouse.click(mon_x(950), 940, "left")
     time.sleep(STEP)
 
-    x0 = 2500
+    x0 = mon_x(580)
     y0 = 970
     dx0 = 250
 
-    x1 = 2400
+    x1 = mon_x(480)
     y1 = 250
     dx1 = 400
     dy1 = 400
@@ -57,87 +57,87 @@ def sel_map(x, y):
     time.sleep(STEP)
 
     #check if save game exists
-    px = pixel(2500, 500)
+    px = pixel(mon_x(500), 500)
     if px[0] == 95 and px[1] == 148 and px[2] == 215:
-        mouse.click(2980, 720, "left")
+        mouse.click(mon_x(1060), 720, "left")
         time.sleep(1)
-        mouse.click(2000, 100, "nothing")
+        mouse.click(mon_x(80), 100, "nothing")
 
     #wait for map to load, end after selecting ok
     if y[0] != 2 or y[1] != 3:
         while True:
-            out = pixel(2800, 750)
+            out = pixel(mon_x(880), 750)
             print(f"{int(out[0])} | {int(out[1])} | {int(out[2])}")
             if out[0] == 110 and out[1] == 231 and out[2] == 0:
-                mouse.click(2800, 750, "left")
+                mouse.click(mon_x(880), 750, "left")
                 time.sleep(1)
-                mouse.click(2800, 750, "left")
+                mouse.click(mon_x(880), 750, "left")
                 break
             time.sleep(1)
     else:
         while True:
-            out = pixel(2800, 750)
+            out = pixel(mon_x(880), 750)
             print(f"{int(out[0])} | {int(out[1])} | {int(out[2])}")
             if out[0] == 210 and out[1] == 210 and out[2] == 210:
                 time.sleep(1)
-                mouse.click(2880, 750, "left")
+                mouse.click(mon_x(960), 750, "left")
                 break
             time.sleep(1)
 
 def finish_chimps():
     """waits for chimps game to end and navigates end screen"""
     while True:
-        px = pixel(2505, 775)
+        px = pixel(mon_x(585), 775)
         if px[0] == 47 and px[1] == 34 and px[2] == 92:
             time.sleep(2)
-            mouse.click(2505, 775, "left")
+            mouse.click(mon_x(585), 775, "left")
             break
         time.sleep(3)
 
     while True:
-        px = pixel(2800, 900)
+        px = pixel(mon_x(880), 900)
         if px[0] == 107 and px[1] == 230 and px[2] == 0:
             time.sleep(2)
-            mouse.click(2800, 900, "left")
+            mouse.click(mon_x(880), 900, "left")
             break
         time.sleep(3)
     time.sleep(1)
-    mouse.click(2600, 800, "left")
+    mouse.click(mon_x(680), 800, "left")
     time.sleep(1)
     while True:
-        out = pixel(2800, 750)
+        out = pixel(mon_x(880), 750)
         print(f"{int(out[0])} | {int(out[1])} | {int(out[2])}")
         if out[0] != 0 or out[1] != 0 or out[2] != 0:
-            mouse.click(2800, 750, "left")
+            mouse.click(mon_x(880), 750, "left")
             break
         time.sleep(1)
 
 def finish():
     """waits for non-chimps game to end and navigates end screen"""
     while True:
-        px = pixel(2800, 900)
+        px = pixel(mon_x(880), 900)
         if px[0] == 107 and px[1] == 230 and px[2] == 0:
             time.sleep(2)
-            mouse.click(2800, 900, "left")
+            mouse.click(mon_x(880), 900, "left")
             break
         time.sleep(3)
     time.sleep(1)
-    mouse.click(2600, 800, "left")
+    mouse.click(mon_x(680), 800, "left")
     time.sleep(1)
     while True:
-        out = pixel(2800, 750)
+        out = pixel(mon_x(880), 750)
         print(f"{int(out[0])} | {int(out[1])} | {int(out[2])}")
         if out[0] != 0 or out[1] != 0 or out[2] != 0:
-            mouse.click(2800, 750, "left")
+            mouse.click(mon_x(880), 750, "left")
             break
         time.sleep(1)
 
 def collect():
     """gets collection rewards, if present"""
-    col = pixel(2785, 675)
+    col = pixel(mon_x(865), 675)
     if col[0] != 104 or col[1] != 229 or col[2] != 0:
         return
-    mouse.click(2785, 675, "left")
+    mouse.click(mon_x(865), 675, "left")
     time.sleep(2)
 
     y = 560
@@ -152,16 +152,16 @@ def collect():
             mouse.click(tx, y - 60, "left")
             time.sleep(STEP)
     time.sleep(1)
-    mouse.click(2843, 993, "left")
+    mouse.click(mon_x(923), 993, "left")
     time.sleep(STEP)
-    mouse.click(1991, 59, "left")
+    mouse.click(mon_x(71), 59, "left")
     time.sleep(STEP)
 
 def main():
     """fuck you nk, I'm automating chimps"""
     #set map class
-    mp = mnk.LoopDeflation
-    
+    mp = mnk.AdoraChimps
+
     sel_map(mp.map, mp.dif)
     time.sleep(2)
 

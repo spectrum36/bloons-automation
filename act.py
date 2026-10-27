@@ -3,12 +3,17 @@ import time
 import subprocess
 import io
 from dataclasses import dataclass
-import numpy as np
 
 from PIL import Image, ImageOps
-from wayland_automation import Mouse, Keyboard
+from wayland_automation import Mouse
 from evdev import UInput, ecodes as e
 import pytesseract as ts
+
+#monitor number that bloons is on, starts at 0
+MON = 1
+def mon_x(x):
+    """changes the x value to be on the right monitor"""
+    return x + (1920 * MON)
 
 ui = UInput()
 
@@ -17,7 +22,6 @@ ui = UInput()
 #height is the height of your tallest monitor
 mouse = Mouse(5760, 1200)
 
-kb = Keyboard()
 STEP = .3
 
 @dataclass
@@ -26,7 +30,7 @@ class Clear:
     x: int
     y: int
 
-CLR = Clear(2740, 900)
+CLR = Clear(mon_x(820), 900)
 
 def select(z):
     """here so I don't have to keep typing this"""

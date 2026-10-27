@@ -1,7 +1,7 @@
 """holds build instructions to be used in main.py"""
 from dataclasses import dataclass
 from evdev import ecodes as e
-from act import place, path, start, target
+from act import place, path, start, target, mon_x
 
 PTH1 = e.KEY_COMMA
 PTH2 = e.KEY_DOT
@@ -45,17 +45,19 @@ class Monk:
     key: int
     tgt: int = 0
 
+#set monkey x value to be as if it is on monitor 0 (value - (1920 * monitor number))
+#use mon_x() to change the x value for monkies to be on the right monitor
 @dataclass
 class AdoraChimps:
     """adora on chimps"""
     map = [2, 3, 2]
     dif = [3, 7]
 
-    ninja = Monk(2693, 341, NINJA)
-    et = Monk(2898, 356, HERO)
-    druid = Monk(2821, 454, DRUID)
-    boom = Monk(2822, 335, BOOM)
-    snipe = Monk(2688, 449, SNIP)
+    ninja = Monk(mon_x(1043), 341, NINJA)
+    et = Monk(mon_x(978), 356, HERO)
+    druid = Monk(mon_x(901), 454, DRUID)
+    boom = Monk(mon_x(902), 335, BOOM)
+    snipe = Monk(mon_x(768), 449, SNIP)
 
     build = [
         [0, place, ninja],
@@ -100,7 +102,7 @@ class LoopDeflation:
     map = [1, 1, 2]
     dif = [1, 3]
 
-    dart = Monk(2772, 506, DART)
+    dart = Monk(mon_x(852), 506, DART)
     build = [
         [0, place, dart],
         [0, path, dart, PTH2, 2],
