@@ -1,6 +1,5 @@
 """fuck you nk"""
 import time
-#from wayland_automation import Mouse, Keyboard
 import mnk
 from act import mouse, STEP, wait_cash, pixel
 
@@ -41,7 +40,12 @@ def sel_map(x, y):
     dy1 = 400
 
     #select map
-    for _ in range(x[1]):
+    if x[0] == 1:
+        num = x[1] - 1
+    else:
+        num = x[1]
+
+    for _ in range(num):
         mouse.click(x0 + (((x[0] - 1) % 4) * dx0), y0, "left")
         time.sleep(STEP)
 
@@ -50,16 +54,34 @@ def sel_map(x, y):
 
     #select difficulty
     sel_dif(y)
-    #wait for map to load, end after selecting ok
-    while True:
-        out = pixel(2800, 750)
-        print(f"{int(out[0])} | {int(out[1])} | {int(out[2])}")
-        if out[0] == 110 and out[1] == 231 and out[2] == 0:
-            mouse.click(2800, 750, "left")
-            time.sleep(1)
-            mouse.click(2800, 750, "left")
-            break
+    time.sleep(STEP)
+
+    #check if save game exists
+    px = pixel(2500, 500)
+    if px[0] == 95 and px[1] == 148 and px[2] == 215:
+        mouse.click(2980, 720, "left")
         time.sleep(1)
+
+    #wait for map to load, end after selecting ok
+    if y[0] != 2 and y[1] != 3:
+        while True:
+            out = pixel(2800, 750)
+            print(f"{int(out[0])} | {int(out[1])} | {int(out[2])}")
+            if out[0] == 110 and out[1] == 231 and out[2] == 0:
+                mouse.click(2800, 750, "left")
+                time.sleep(1)
+                mouse.click(2800, 750, "left")
+                break
+            time.sleep(1)
+    else:
+        while True:
+            out = pixel(2800, 750)
+            print(f"{int(out[0])} | {int(out[1])} | {int(out[2])}")
+            if out[0] == 210 and out[1] == 210 and out[2] == 210:
+                time.sleep(1)
+                mouse.click(2880, 750, "left")
+                break
+            time.sleep(1)
 
 def finish_chimps():
     """waits for chimps game to end and navigates end screen"""
@@ -71,6 +93,26 @@ def finish_chimps():
             break
         time.sleep(3)
 
+    while True:
+        px = pixel(2800, 900)
+        if px[0] == 107 and px[1] == 230 and px[2] == 0:
+            time.sleep(2)
+            mouse.click(2800, 900, "left")
+            break
+        time.sleep(3)
+    time.sleep(1)
+    mouse.click(2600, 800, "left")
+    time.sleep(1)
+    while True:
+        out = pixel(2800, 750)
+        print(f"{int(out[0])} | {int(out[1])} | {int(out[2])}")
+        if out[0] != 0 or out[1] != 0 or out[2] != 0:
+            mouse.click(2800, 750, "left")
+            break
+        time.sleep(1)
+
+def finish():
+    """waits for non-chimps game to end and navigates end screen"""
     while True:
         px = pixel(2800, 900)
         if px[0] == 107 and px[1] == 230 and px[2] == 0:
@@ -105,7 +147,7 @@ def collect():
         if col[0] != 18 or col[1] != 20 or col[2] != 23:
             time.sleep(STEP)
             mouse.click(tx, y - 60, "left")
-            time.sleep(1)
+            time.sleep(1.5)
             mouse.click(tx, y - 60, "left")
             time.sleep(STEP)
     time.sleep(1)
@@ -116,17 +158,23 @@ def collect():
 
 def main():
     """fuck you nk, I'm automating chimps"""
-    mp = mnk.AdoraChimps
+    mp = mnk.LoopDeflation
     sel_map(mp.map, mp.dif)
-    time.sleep(3)
-    last = 650
+    time.sleep(2)
+
+    #build instruction loop
     for i in mp.build:
         cash, instruction, *args = i
-        wait_cash(cash, last)
-        last = instruction(*args)
+        wait_cash(cash)
+        instruction(*args)
 
-    finish_chimps()
+    if mp.dif[0] == 3 and mp.dif[1] == 7:
+        finish_chimps()
+    else:
+        finish()
+    time.sleep(1)
     collect()
+    time.sleep(1)
 
 #runs main infinitely
 while True:

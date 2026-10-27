@@ -3,11 +3,13 @@ import time
 import subprocess
 import io
 from dataclasses import dataclass
+import numpy as np
 
 from PIL import Image, ImageOps
 from wayland_automation import Mouse, Keyboard
 from evdev import UInput, ecodes as e
 import pytesseract as ts
+
 ui = UInput()
 mouse = Mouse()
 kb = Keyboard()
@@ -34,47 +36,52 @@ def cash():
         [ "grim", "-g", "2286,9 220x60", "-t", "png", "-"],
         capture_output=True, check=True,
     ).stdout
+
     img = Image.open(io.BytesIO(png))
     img = ImageOps.grayscale(img)
-
     img = img.point(lambda p: 255 if p == 255 else 0)
-
     img = ImageOps.invert(img)
 
-    #img.save("debug.png")
+    img.save("debug.png")
 
-    text = ts.image_to_string(
+    text = ts.image_to_data(
         img,
-        config="--psm 7 -c tessedit_char_whitelist=0123456789",
+        config="--psm 7 -c tessedit_char_whitelist=0123456789,",
+        output_type=ts.Output.DICT
     )
     return text
 
 def get_cash():
     """try to get cash"""
-    c = ""
-    while c == "":
-        c = cash()[:-1]
-        try:
-            int(c)
-        except ValueError:
-            c = ""
-    return int(c)
-
-
-def wait_cash(x, y):
-    """wait for cash amount"""
-    c = get_cash()
     while True:
-        c = get_cash()
-        print(f"{c} | {y}")
-        if (c - y) / ((y + c) /2) < .4:
+        data = cash()
+        for i in range(len(data['text'])):
+            num = data['text'][i]
+            x = data['conf'][i]
+            if x != 0 and num.strip():
+                num = num.replace(",", "")
+                break
+
+        try:
+            c = int(num)
+            return c, x
+        except ValueError:
+            print("int conversion failed")
+
+def wait_cash(x):
+    """wait for cash amount"""
+    if x == 0:
+        return
+    c, conf = get_cash()
+    while True:
+        c, conf = get_cash()
+        print(f"{c} | {conf}")
+        if conf > 85:
             if x < c:
                 break
-            time.sleep(1)
         else:
-            print(f"ignored cash, reading at {c}")
-        y = c
-    return y
+            print(f"ignored cash, reading at {c}, confidence {conf}")
+        time.sleep(1)
 
 def pixel(x,y):
     """gets color of pixel"""
@@ -102,27 +109,26 @@ def place(z):
 
     mouse.click(z.x, z.y, "left")
     time.sleep(STEP)
-    return get_cash()
 
-def start():
-    """starts the game"""
-    for _ in range(2):
+
+def start(x = 2):
+    """starts the game, variable is for apopolypse, set to 1 to only hit space once for ff"""
+    for _ in range(x):
         ui.write(e.EV_KEY, e.KEY_SPACE, 1)
         ui.syn()
         time.sleep(0.1)
         ui.write(e.EV_KEY, e.KEY_SPACE, 0)
         ui.syn()
         time.sleep(STEP)
-    return get_cash()
 
-def path(x, y):
-    """ugprade path"""
+def path(x, y, z=1):
+    """ugprade path, z is repetition for deflation"""
     select(x)
-    ui.write(e.EV_KEY, y, 1)
-    ui.syn()
-    time.sleep(0.1)
-    ui.write(e.EV_KEY, y, 0)
-    ui.syn()
-    time.sleep(STEP)
+    for _ in range(z):
+        ui.write(e.EV_KEY, y, 1)
+        ui.syn()
+        time.sleep(0.1)
+        ui.write(e.EV_KEY, y, 0)
+        ui.syn()
+        time.sleep(STEP)
     select(CLR)
-    return get_cash()

@@ -16,6 +16,7 @@
           grim
           python314Packages.pytesseract
           python314Packages.evdev
+          python314Packages.opencv4
           wtype
           wayland-utils
         ];

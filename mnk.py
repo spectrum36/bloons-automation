@@ -55,6 +55,7 @@ class AdoraChimps:
     et = Monk(2898, 356, HERO)
     druid = Monk(2821, 454, DRUID)
     boom = Monk(2822, 335, BOOM)
+    snipe = Monk(2688, 449, SNIP)
 
     build = [
         [0, place, ninja],
@@ -82,5 +83,27 @@ class AdoraChimps:
         [2160, path, boom, PTH1],
         [35000, path, boom, PTH1],
         [37800, path, druid, PTH2],
-        [43200, path, ninja, PTH3]
+        [43200, path, ninja, PTH3],
+        [380, place, snipe],
+        [270, path, snipe, PTH2],
+        [485, path, snipe, PTH2],
+        [485, path, snipe, PTH3],
+        [485, path, snipe, PTH3],
+        [2915, path, snipe, PTH3],
+        [4439, path, snipe, PTH3],
+        [16090, path, snipe, PTH3]
+    ]
+
+@dataclass
+class LoopDeflation:
+    """loop on deflation"""
+    map = [1, 1, 2]
+    dif = [1, 3]
+
+    dart = Monk(2772, 506, DART)
+    build = [
+        [0, place, dart],
+        [0, path, dart, PTH2, 2],
+        [0, path, dart, PTH3, 5],
+        [0, start]
     ]
