@@ -29,5 +29,11 @@ Map/difficulty combinations are stored as dataclasses in mnk.py. To add your own
 
 4. build, this is a list of lists, each entry is an instruction to follow. The available instructions are place (places monkey at it's x,y pos), path (upgrades a path on a monkey, PTH1-3 hold the hotkey for pathing), target (changes monkey's targeting, monkies start at 0 for first, pass the number for targeting to change to), and start (starts the game, pass 1 to start on apopolypse)
 
+6. wait, self explanatory, pass number of seconds to wait
+
+7. click, also self explanatory, pass x,y coords to click on, used for interacting with map objects
+
+8. ability, uses an ability, pass it the ecode for the ability key (e.KEY_1 for ability 1)
+
 Drop a pr or something if you want me to add your build instructions to the repo.
 

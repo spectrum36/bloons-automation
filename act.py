@@ -34,6 +34,24 @@ class Clear:
 
 CLR = Clear(mon_x(820), 900)
 
+def ability(x):
+    """uses specified ability"""
+    ui.write(e.EV_KEY, x, 1)
+    ui.syn()
+    time.sleep(0.1)
+    ui.write(e.EV_KEY, x, 0)
+    ui.syn()
+    time.sleep(STEP)
+
+def click(x, y):
+    """build instruction, clicks on specified point on screen"""
+    mouse.click(x, y, "left")
+    time.sleep(STEP)
+
+def wait(x):
+    """build instruction, waits specified number of seconds"""
+    time.sleep(x)
+
 def select(z):
     """here so I don't have to keep typing this"""
     mouse.click(z.x, z.y, "left")
