@@ -10,4 +10,4 @@ def pixel(x,y):
     for i in range(3):
         ret[i] = int(penis[i])
     return ret
-print(pixel(2800, 750))
+print(pixel(2520, 500))

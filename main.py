@@ -3,6 +3,10 @@ import time
 import mnk
 from act import mouse, STEP, wait_cash, pixel, mon_x
 
+MP = mnk.AdoraChimps
+
+LOOP = True
+
 #TODO add difficulty checks
 def sel_dif(x):
     """select difficulty from list [difficulty, type]"""
@@ -57,7 +61,7 @@ def sel_map(x, y):
     time.sleep(STEP)
 
     #check if save game exists
-    px = pixel(mon_x(500), 500)
+    px = pixel(mon_x(600), 500)
     if px[0] == 95 and px[1] == 148 and px[2] == 215:
         mouse.click(mon_x(1060), 720, "left")
         time.sleep(1)
@@ -159,19 +163,16 @@ def collect():
 
 def main():
     """fuck you nk, I'm automating chimps"""
-    #set map class
-    mp = mnk.AdoraChimps
-
-    sel_map(mp.map, mp.dif)
+    sel_map(MP.map, MP.dif)
     time.sleep(2)
 
     #build instruction loop
-    for i in mp.build:
+    for i in MP.build:
         cash, instruction, *args = i
         wait_cash(cash)
         instruction(*args)
 
-    if mp.dif[0] == 3 and mp.dif[1] == 7:
+    if MP.dif[0] == 3 and MP.dif[1] == 7:
         finish_chimps()
     else:
         finish()
@@ -179,6 +180,8 @@ def main():
     collect()
     time.sleep(1)
 
-#runs main infinitely
-while True:
+if LOOP:
+    while True:
+        main()
+else:
     main()

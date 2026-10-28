@@ -24,6 +24,8 @@ mouse = Mouse(5760, 1200)
 
 STEP = .3
 
+CASHX = mon_x(366)
+
 @dataclass
 class Clear:
     """clear coords"""
@@ -75,7 +77,7 @@ def target(x, tgt):
 def cash():
     """gets cash, returns string"""
     png = subprocess.run(
-        [ "grim", "-g", "2286,9 220x60", "-t", "png", "-"],
+        [ "grim", "-g", f"{CASHX},9 220x60", "-t", "png", "-"],
         capture_output=True, check=True,
     ).stdout
 

@@ -53,7 +53,7 @@ class AdoraChimps:
     map = [2, 3, 2]
     dif = [3, 7]
 
-    ninja = Monk(mon_x(1043), 341, NINJA)
+    ninja = Monk(mon_x(768), 341, NINJA)
     et = Monk(mon_x(978), 356, HERO)
     druid = Monk(mon_x(901), 454, DRUID)
     boom = Monk(mon_x(902), 335, BOOM)
