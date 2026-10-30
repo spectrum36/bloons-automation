@@ -52,45 +52,6 @@ def wait(x):
     """build instruction, waits specified number of seconds"""
     time.sleep(x)
 
-def select(z):
-    """here so I don't have to keep typing this"""
-    mouse.click(z.x, z.y, "left")
-    time.sleep(STEP)
-
-def target(x, tgt):
-    """change targeting"""
-    select(x)
-    time.sleep(STEP)
-
-    if x.tgt == tgt:
-        return
-    change = abs(x.tgt - tgt)
-
-    if x.tgt > tgt:
-        for _ in range(change):
-            ui.write(e.EV_KEY, e.KEY_TAB, 1)
-            ui.syn()
-            time.sleep(0.1)
-            ui.write(e.EV_KEY, e.KEY_TAB, 0)
-            ui.syn()
-            time.sleep(0.1)
-    else:
-        for _ in range(change):
-            ui.write(e.EV_KEY, e.KEY_LEFTCTRL, 1)
-            ui.syn()
-            #time.sleep(0.1)
-            ui.write(e.EV_KEY, e.KEY_TAB, 1)
-            ui.syn()
-            time.sleep(0.1)
-            ui.write(e.EV_KEY, e.KEY_TAB, 0)
-            ui.syn()
-            ui.write(e.EV_KEY, e.KEY_LEFTCTRL, 0)
-            ui.syn()
-            time.sleep(0.1)
-
-    x.tgt = tgt
-    select(CLR)
-    time.sleep(STEP)
 
 def cash():
     """gets cash, returns string"""
@@ -157,22 +118,6 @@ def pixel(x,y):
         ret.append(balls[i])
     return ret
 
-def place(z):
-    """places monkey"""
-    mouse.click(z.x, z.y)
-    time.sleep(STEP)
-
-    ui.write(e.EV_KEY, z.key, 1)
-    ui.syn()
-    time.sleep(0.1)
-    ui.write(e.EV_KEY, z.key, 0)
-    ui.syn()
-    time.sleep(STEP)
-
-    mouse.click(z.x, z.y, "left")
-    time.sleep(STEP)
-
-
 def start(x = 2):
     """starts the game, variable is for apopolypse, set to 1 to only hit space once for ff"""
     for _ in range(x):
@@ -182,15 +127,3 @@ def start(x = 2):
         ui.write(e.EV_KEY, e.KEY_SPACE, 0)
         ui.syn()
         time.sleep(STEP)
-
-def path(x, y, z=1):
-    """ugprade path, z is repetition for deflation"""
-    select(x)
-    for _ in range(z):
-        ui.write(e.EV_KEY, y, 1)
-        ui.syn()
-        time.sleep(0.1)
-        ui.write(e.EV_KEY, y, 0)
-        ui.syn()
-        time.sleep(STEP)
-    select(CLR)

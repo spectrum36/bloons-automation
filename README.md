@@ -21,19 +21,29 @@ In main.py, there are two variables at the top of the file. MP holds the map cla
 
 Map/difficulty combinations are stored as dataclasses in mnk.py. To add your own, make a new dataclass with the following variables
 
-1. map, maps are stored as a list, given as [type, page, map number on page]. For example, adora's temple is [2, 3, 2] for [medium, page 2, map 2].
+1. Map, maps are stored as a list, given as [type, page, map number on page]. For example, adora's temple is [2, 3, 2] for [medium, page 2, map 2].
 
-2. dif, difficulties are also stored as a list, given as [difficulty, mode]. For example, half cash is [3, 4] for [hard, half cash].
+2. Dif, difficulties are also stored as a list, given as [difficulty, mode]. For example, half cash is [3, 4] for [hard, half cash].
 
-3. monkies, there isn't one variable for monkies, rather monkies are stored as instances of the Monk class. To add a ninja to your class, you would add ninja = Monk(x pos, y pos, NINJA). There's a list of constants that map each monkey to its respective hotkey. Desperado, Mermonkey, and Skywarden don't have hotkeys because they aren't assigned by default. I need to figure out a good way to handle this.
+3. Monkies, there isn't one variable for monkies, rather monkies are stored as instances of the Monk class. To add a ninja to your class, you would add ninja = Monk(x pos, y pos, NINJA). There's a list of constants that map each monkey to its respective hotkey. Desperado, Mermonkey, and Skywarden don't have default hotkeys, I have them set to backslash, o and p respectively, so change your hotkeys to match this if you use instructions that use those.
 
-4. build, this is a list of lists, each entry is an instruction to follow. The available instructions are place (places monkey at it's x,y pos), path (upgrades a path on a monkey, PTH1-3 hold the hotkey for pathing), target (changes monkey's targeting, monkies start at 0 for first, pass the number for targeting to change to), and start (starts the game, pass 1 to start on apopolypse)
+4. Build, this is a list of lists, each entry is an instruction to follow. The available instructions are:
+    
+    1. Place, places monkey at it's x,y pos 
 
-6. wait, self explanatory, pass number of seconds to wait
+    2. Path, upgrades a path on a monkey, PTH1-3 hold the hotkey for pathing 
 
-7. click, also self explanatory, pass x,y coords to click on, used for interacting with map objects
+    3. Target, changes monkey's targeting, monkies start at 0 for first, pass the number for targeting to change to
+    
+    4. Start (starts the game, pass 1 to start on apopolypse). Place, path, and target are methods in the Monk class.
 
-8. ability, uses an ability, pass it the ecode for the ability key (e.KEY_1 for ability 1)
+    5. Wait, self explanatory, pass number of seconds to wait
+
+    6. Click, also self explanatory, pass x,y coords to click on, used for interacting with map objects
+
+    7. Ability, uses an ability, pass it the ecode for the ability key (e.KEY_1 for ability 1)
+
+Place, path and target are methods in the Monk class.
 
 Drop a pr or something if you want me to add your build instructions to the repo.
 
