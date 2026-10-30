@@ -3,7 +3,9 @@
 
 This is a python script made to automate bloons td6 on linux under a wayland session. I made it so that I can cheese collection events.
 
-It uses a very slightly modified version of wayland_automation that is stored in .venv.
+It uses a very slightly modified version of wayland_automation, replace mouse_controller.py in your .venv with the one in the repo.
+
+It also requires grim, tesseract, wtype, and wayland-utils. These (and the other python dependencies) are in the flake.nix for the shell.
 
 ## How it works
 
