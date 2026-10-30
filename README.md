@@ -37,7 +37,7 @@ Map/difficulty combinations are stored as dataclasses in mnk.py. To add your own
 
     3. Target, changes monkey's targeting, monkies start at 0 for first, pass the number for targeting to change to
     
-    4. Start (starts the game, pass 1 to start on apopolypse). Place, path, and target are methods in the Monk class.
+    4. Start, starts the game, pass 1 to start on apopolypse
 
     5. Wait, self explanatory, pass number of seconds to wait
 
