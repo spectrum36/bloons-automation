@@ -9,9 +9,9 @@ It also requires grim, tesseract, wtype, and wayland-utils. These (and the other
 
 ## How it works
 
-The script executes a list of build instructions stored in a class in mnk.py. Build instructions are alist of lists stored as build in each class. An instruction looks like [cash, function, monkey, *args]. 
+The script executes a list of build instructions stored in a class in mnk.py. Build instructions are alist of lists stored as build in each class. An instruction looks like [cash, function, *args]. 
 
-It uses OCR to read the cash value then waits for cash to be greater than the cash value in the build instruction before executing the function, it uses argument unpacking to give the args to the specificed function, so anything after monkey will be passed to the specified function.
+It uses OCR to read the cash value then waits for cash to be greater than the cash value in the build instruction before executing the function, it uses argument unpacking to give the args to the specificed function, so anything after the function will be passed as arguments.
 
 ## Variables to change
 
