@@ -3,12 +3,13 @@ import time
 import mnk
 from act import mouse, STEP, wait_cash, pixel, mon_x
 
-MP = mnk.AdoraChimps
+LOOP = False
 
-LOOP = True
+#map to use
+MP = mnk.ThreeMinesChimps
 
 #TODO add difficulty checks
-def sel_dif(x):
+def sel_dif(dif):
     """select difficulty from list [difficulty, type]"""
     x0 = mon_x(630)
     y0 = 400
@@ -19,17 +20,17 @@ def sel_dif(x):
     dx1 = 310
     dy1 = 300
 
-    mouse.click(x0 + (((x[0] - 1) % 3) * dx0), y0, "left")
+    mouse.click(x0 + (((dif[0] - 1) % 3) * dx0), y0, "left")
     time.sleep(STEP)
-    if x[1] == 1:
-        mouse.click(mon_x(630), 600, "nothing")
+    if dif[1] == 1:
+        mouse.click(mon_x(630), 600, "left")
         time.sleep(STEP)
     else:
-        mouse.click(x1 + (((x[1] - 2) % 3) * dx1), y1 + (((x[1] - 2) // 3) * dy1), "left")
+        mouse.click(x1 + (((dif[1] - 2) % 3) * dx1), y1 + (((dif[1] - 2) // 3) * dy1), "left")
         time.sleep(STEP)
 
 #TODO add map checks
-def sel_map(x, y):
+def sel_map(x, dif):
     """select map from given list [type, page, map num], starting at home screen"""
     mouse.click(mon_x(950), 940, "left")
     time.sleep(STEP)
@@ -46,6 +47,8 @@ def sel_map(x, y):
     #select map
     if x[0] == 1:
         num = x[1] - 1
+        if num == 0:
+            time.sleep(STEP)
     else:
         num = x[1]
 
@@ -57,7 +60,7 @@ def sel_map(x, y):
     time.sleep(STEP)
 
     #select difficulty
-    sel_dif(y)
+    sel_dif(dif)
     time.sleep(STEP)
 
     #check if save game exists
@@ -65,10 +68,11 @@ def sel_map(x, y):
     if px[0] == 95 and px[1] == 148 and px[2] == 215:
         mouse.click(mon_x(1060), 720, "left")
         time.sleep(1)
-        mouse.click(mon_x(80), 100, "nothing")
+    
+    mouse.click(mon_x(80), 100, "nothing")
 
     #wait for map to load, end after selecting ok
-    if y[0] != 2 or y[1] != 3:
+    if dif[0] != 2 or dif[1] != 3:
         while True:
             out = pixel(mon_x(880), 750)
             print(f"{int(out[0])} | {int(out[1])} | {int(out[2])}")

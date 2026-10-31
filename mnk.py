@@ -2,7 +2,7 @@
 import time
 from dataclasses import dataclass
 from evdev import ecodes as e
-from act import start, mon_x, STEP, mouse, ui
+from act import start, mon_x, STEP, mouse, ui, wait_round
 
 
 PTH1 = e.KEY_COMMA
@@ -182,3 +182,11 @@ class LoopDeflation:
         [0, dart.path, PTH3, 5],
         [0, start]
     ]
+
+@dataclass
+class ThreeMinesChimps:
+    """shut up linter"""
+    map = [1, 1, 4]
+    dif = [3, 5]
+
+    build = [[0, wait_round, 100, dif]]

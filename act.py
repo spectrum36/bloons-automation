@@ -9,6 +9,8 @@ from wayland_automation import Mouse
 from evdev import UInput, ecodes as e
 import pytesseract as ts
 
+
+
 #monitor number that bloons is on, starts at 0
 MON = 1
 def mon_x(x):
@@ -52,11 +54,10 @@ def wait(x):
     """build instruction, waits specified number of seconds"""
     time.sleep(x)
 
-
-def cash():
-    """gets cash, returns string"""
+def img_grab(x, y, x0, y0):
+    """image grabbing and processing for ocr"""
     png = subprocess.run(
-        [ "grim", "-g", f"{CASHX},9 220x60", "-t", "png", "-"],
+        [ "grim", "-g", f"{x},{y} {x0}x{y0}", "-t", "png", "-"],
         capture_output=True, check=True,
     ).stdout
 
@@ -65,7 +66,54 @@ def cash():
     img = img.point(lambda p: 255 if p == 255 else 0)
     img = ImageOps.invert(img)
 
+    return img
+
+def rnd(dif):
+    """gets round, returns dict"""
+    if dif[0] == 3 and (dif[1] == 6 or dif == 7):
+        img = img_grab(3300, 30, 87, 40)
+    else:
+        img = img_grab(3300, 30, 102, 40)
     img.save("debug.png")
+
+    text = ts.image_to_data(
+        img,
+        config="--psm 7 -c tessedit_char_whitelist=0123456789/",
+        output_type=ts.Output.DICT
+    )
+    return text
+
+
+def get_round(dif):
+    """validates grabbed round, returns int"""
+    while True:
+        data = rnd(dif)
+        for i in range(len(data['text'])):
+            num = data['text'][i]
+            x = data['conf'][i]
+            if x != 0 and num.strip():
+                break
+        try:
+            c = int(num)
+            return c, x
+        except ValueError:
+            print("int conversion failed")
+
+def wait_round(x, dif):
+    """waits for round number"""
+    while True:
+        c, conf = get_round(dif)
+        print(f"{c} | {conf}")
+        if conf > 85:
+            if x <= c:
+                break
+        else:
+            print(f"ignored round, reading at {c}, confidence {conf}")
+        time.sleep(1)
+
+def cash():
+    """gets cash, returns dict"""
+    img = img_grab(CASHX, 9, 220, 60)
 
     text = ts.image_to_data(
         img,
@@ -84,7 +132,6 @@ def get_cash():
             if x != 0 and num.strip():
                 num = num.replace(",", "")
                 break
-
         try:
             c = int(num)
             return c, x
@@ -95,7 +142,6 @@ def wait_cash(x):
     """wait for cash amount"""
     if x == 0:
         return
-    c, conf = get_cash()
     while True:
         c, conf = get_cash()
         print(f"{c} | {conf}")
