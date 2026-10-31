@@ -68,11 +68,12 @@ def sel_map(x, dif):
     if px[0] == 95 and px[1] == 148 and px[2] == 215:
         mouse.click(mon_x(1060), 720, "left")
         time.sleep(1)
-    
+
     mouse.click(mon_x(80), 100, "nothing")
+    time.sleep(1)
 
     #wait for map to load, end after selecting ok
-    if dif[0] != 2 or dif[1] != 3:
+    if (dif[0] == 3 and (dif[1] == 4 or dif[1] == 6 or dif[1] == 7)) or (dif[0] == 1 and dif[1] == 3):
         while True:
             out = pixel(mon_x(880), 750)
             print(f"{int(out[0])} | {int(out[1])} | {int(out[2])}")
@@ -82,7 +83,7 @@ def sel_map(x, dif):
                 mouse.click(mon_x(880), 750, "left")
                 break
             time.sleep(1)
-    else:
+    elif dif[0] == 2 and dif[1] == 3:
         while True:
             out = pixel(mon_x(880), 750)
             print(f"{int(out[0])} | {int(out[1])} | {int(out[2])}")
@@ -91,6 +92,17 @@ def sel_map(x, dif):
                 mouse.click(mon_x(960), 750, "left")
                 break
             time.sleep(1)
+    else:
+        while True:
+            out = pixel(mon_x(880), 750)
+            print(f"{int(out[0])} | {int(out[1])} | {int(out[2])}")
+            if out[0] != 0 or out[1] != 0 or out[2] != 0:
+                time.sleep(1)
+                mouse.click(mon_x(960), 750, "left")
+                break
+            time.sleep(1)
+
+
 
 def finish_chimps():
     """waits for chimps game to end and navigates end screen"""

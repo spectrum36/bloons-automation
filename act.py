@@ -27,6 +27,7 @@ mouse = Mouse(5760, 1200)
 STEP = .3
 
 CASHX = mon_x(366)
+RNDX = mon_x(1380)
 
 @dataclass
 class Clear:
@@ -62,19 +63,20 @@ def img_grab(x, y, x0, y0):
     ).stdout
 
     img = Image.open(io.BytesIO(png))
+    img.save("preprocess.png")
     img = ImageOps.grayscale(img)
     img = img.point(lambda p: 255 if p == 255 else 0)
     img = ImageOps.invert(img)
+    img.save("final.png")
 
     return img
 
 def rnd(dif):
     """gets round, returns dict"""
-    if dif[0] == 3 and (dif[1] == 6 or dif == 7):
-        img = img_grab(3300, 30, 87, 40)
+    if dif[0] == 3 and (dif[1] == 6 or dif[1] == 7):
+        img = img_grab(RNDX, 30, 87, 40)
     else:
-        img = img_grab(3300, 30, 102, 40)
-    img.save("debug.png")
+        img = img_grab(RNDX, 30, 106, 40)
 
     text = ts.image_to_data(
         img,
